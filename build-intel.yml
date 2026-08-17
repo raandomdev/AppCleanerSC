@@ -1,0 +1,58 @@
+# Local / CI build recipe for Intel (x86_64) Macs
+# Not a GitHub Actions file — use with the companion workflow or run the
+# commands below yourself on an Intel Mac (or under Rosetta).
+#
+# GitHub Actions workflow (recommended):
+#   .github/workflows/build-macos-intel.yml
+#
+# Manual build on an Intel Mac:
+#
+#   python3 -m venv .venv
+#   source .venv/bin/activate
+#   pip install -r requirements.txt pyinstaller
+#   pyinstaller \
+#     --noconfirm \
+#     --windowed \
+#     --name AppCleaner \
+#     --osx-bundle-identifier com.appcleaner.app \
+#     --target-arch x86_64 \
+#     --add-data "index.html:." \
+#     --add-data "style.css:." \
+#     --add-data "app.js:." \
+#     --collect-all webview \
+#     --hidden-import AppKit \
+#     --hidden-import Cocoa \
+#     --hidden-import Foundation \
+#     --hidden-import objc \
+#     main.py
+#
+# Output: dist/AppCleaner.app
+
+name: AppCleaner
+platform: macos
+arch: x86_64
+python: "3.12"
+
+bundle:
+  id: com.appcleaner.app
+  name: AppCleaner
+  windowed: true
+
+datas:
+  - index.html
+  - style.css
+  - app.js
+
+hidden_imports:
+  - AppKit
+  - Cocoa
+  - Foundation
+  - objc
+  - webview
+
+collect_all:
+  - webview
+
+pyinstaller:
+  target_arch: x86_64
+  osx_bundle_identifier: com.appcleaner.app
